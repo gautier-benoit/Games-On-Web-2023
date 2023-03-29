@@ -1,0 +1,56 @@
+Pour créer un labyrinthe d'arbres complet en Babylon.js, vous pouvez suivre les étapes suivantes :
+
+Créer une scène vide en Babylon.js :
+javascript
+Copy code
+var canvas = document.getElementById("renderCanvas");
+var engine = new BABYLON.Engine(canvas, true);
+var scene = new BABYLON.Scene(engine);
+Ajouter une caméra à la scène :
+javascript
+Copy code
+var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
+camera.setTarget(BABYLON.Vector3.Zero());
+camera.attachControl(canvas, true);
+Ajouter une lumière à la scène :
+javascript
+Copy code
+var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+light.intensity = 0.7;
+Créer une fonction pour générer un arbre aléatoire :
+javascript
+Copy code
+function createRandomTree(scene) {
+  var tree = BABYLON.MeshBuilder.CreateCylinder("tree", {height: 2, diameterTop: 0, tessellation: 6}, scene);
+  var branches = [];
+  for (var i = 0; i < 3; i++) {
+    var branch = BABYLON.MeshBuilder.CreateCylinder("branch", {height: 1, diameterTop: 0.2, tessellation: 6}, scene);
+    branch.position.y = 0.5 + i * 0.5;
+    branch.rotation.z = Math.PI / 6 * (i - 1);
+    branch.parent = tree;
+    branches.push(branch);
+  }
+  return tree;
+}
+Créer une grille de positions pour les arbres :
+javascript
+Copy code
+var gridSize = 10;
+var gridSpacing = 4;
+var gridOffset = (gridSize - 1) * gridSpacing / 2;
+var gridPositions = [];
+for (var x = 0; x < gridSize; x++) {
+  for (var z = 0; z < gridSize; z++) {
+    gridPositions.push(new BABYLON.Vector3((x - gridOffset) * gridSpacing, 0, (z - gridOffset) * gridSpacing));
+  }
+}
+Placer les arbres sur la grille en utilisant la fonction createRandomTree :
+javascript
+Copy code
+var trees = [];
+gridPositions.forEach(function(position) {
+  var tree = createRandomTree(scene);
+  tree.position = position;
+  trees.push(tree);
+});
+Créer une grille de murs
